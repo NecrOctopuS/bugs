@@ -80,19 +80,52 @@ def get_approximately_left_and_right(bugs_count, rocks_count):
     else:
         delimiter = 2 ** (number + 1)
     left = int(rocks_count / delimiter) - 1
+    if left < 0:
+        left = 0
     right = int(rocks_count / delimiter)
     return left, right
 
 
+def is_valid(rocks_count, bugs_count):
+    if bugs_count < 0 or rocks_count < 0:
+        print('Введено отрицательное значение, необходимо положительное значение')
+        exit()
+    elif bugs_count > rocks_count:
+        print('Жуков больше чем камней, не все жуки смогли спрятаться под камнями')
+        exit()
+    elif rocks_count == 0 and bugs_count == 0:
+        print(f'Камней нет, жуков нет, все бессмысленно')
+        exit()
+    elif rocks_count == 0:
+        print(f'Камней 0, соответственно все {bugs_count} жуки остались стоять на месте')
+        exit()
+    elif bugs_count == 0:
+        print(f'Жуков 0, соответственно все {rocks_count} камней свободны')
+        exit()
+    elif bugs_count == rocks_count:
+        print('Жуков и камней одинаковое количество, соответственно все камни заняты')
+        exit()
+    return bugs_count <= rocks_count
+
+
 def main():
-    bugs_count = int(input('Введите количество жуков: '))
-    rocks_count = int(input('Введите количество камней: '))
-    if bugs_count * rocks_count < MAX_COUNT:
-        rocks = simulation(rocks_count, bugs_count)
-        left, right = get_left_and_right(rocks, bugs_count)
-    else:
-        left, right = get_approximately_left_and_right(bugs_count, rocks_count)
-    print(f'Количество свободных камней слева: {left} \nКоличество свободных камней справа: {right}')
+    try:
+        rocks_count = int(input('Введите количество камней: '))
+    except ValueError:
+        print('Для количества камней нужно ввести цифровое значение')
+        exit()
+    try:
+        bugs_count = int(input('Введите количество жуков: '))
+    except ValueError:
+        print('Для количества жуков нужно ввести цифровое значение')
+        exit()
+    if is_valid(rocks_count, bugs_count):
+        if bugs_count * rocks_count < MAX_COUNT:
+            rocks = simulation(rocks_count, bugs_count)
+            left, right = get_left_and_right(rocks, bugs_count)
+        else:
+            left, right = get_approximately_left_and_right(bugs_count, rocks_count)
+        print(f'Количество свободных камней слева: {left} \nКоличество свободных камней справа: {right}')
 
 
 if __name__ == '__main__':
